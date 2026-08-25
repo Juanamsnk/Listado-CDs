@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi colección de CDs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #121014;
+    --surface: #1b1820;
+    --surface-raised: #221e28;
+    --amber: #e3a335;
+    --amber-dim: #a9792a;
+    --teal: #4b8b8d;
+    --text: #f2ede4;
+    --muted: #948d9e;
+    --line: #322c38;
+    --danger: #c1594a;
+    --radius: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(227,163,53,0.06), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(75,139,141,0.07), transparent 40%);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .wrap{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    display:flex;
+    align-items:center;
+    gap: 28px;
+    margin-bottom: 56px;
+  }
+
+  .vinyl{
+    --size: 108px;
+    width: var(--size);
+    height: var(--size);
+    flex: none;
+    border-radius: 50%;
+    background:
+      repeating-radial-gradient(circle at center,
+        #0c0b0e 0px, #0c0b0e 2px,
+        #1a171d 2px, #1a171d 4px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 12px 30px rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation: spin 9s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .vinyl{ animation: none; }
+  }
+
+  @keyframes spin{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+
+  .vinyl::after{
+    content:"";
+    width: 38%;
+    height: 38%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--amber), var(--amber-dim) 70%);
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.35);
+    position:relative;
+  }
+
+  .vinyl::before{
+    content:"";
+    position:absolute;
+    width:6px; height:6px;
+    background: var(--bg);
+    border-radius:50%;
+    z-index:2;
+  }
+
+  .hero-text h1{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.9rem;
+    letter-spacing: 0.5px;
+    margin: 0 0 4px;
+    color: var(--text);
+  }
+
+  .hero-text p{
+    margin:0;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.92rem;
+  }
+
+  /* ---------- SECTION SHELLS ---------- */
+  section{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 28px 32px;
+    margin-bottom: 32px;
+  }
+
+  section > h2{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.6px;
+    margin: 0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .eyebrow{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .section-sub{
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 22px;
+  }
+
+  /* ---------- FORM ---------- */
+  form#add-form{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .field{
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field input{
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 11px 12px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+
+  .field input:focus{
+    outline: none;
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(227,163,53,0.18);
+  }
+
+  form#add-form button{
+    grid-column: 1 / -1;
+    justify-self: start;
+    background: var(--amber);
+    color: #1b1408;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform .12s ease, background .15s ease;
+  }
+
+  form#add-form button:hover{ background: #f0b64f; }
+  form#add-form button:active{ transform: scale(0.98); }
+
+  .form-msg{
+    grid-column: 1 / -1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--danger);
+    min-height: 1em;
+    margin-top: -6px;
+  }
+
+  /* ---------- FILTERS ---------- */
+  .filters{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .filters input{
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .filters input:focus{
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(75,139,141,0.18);
+  }
+
+  .list-meta{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+  }
+
+  .list-meta button{
+    background: none;
+    border: none;
+    color: var(--muted);
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+  }
+  .list-meta button:hover{ color: var(--danger); }
+
+  /* ---------- RECORD LIST ---------- */
+  #record-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .record{
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+
+  .label-disc{
+    --lsize: 46px;
+    width: var(--lsize);
+    height: var(--lsize);
+    border-radius: 50%;
+    flex: none;
+    background:
+      repeating-radial-gradient(circle at center,
+        #0c0b0e 0px, #0c0b0e 1.5px,
+        #1a171d 1.5px, #1a171d 3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  .label-disc span{
+    width: 44%;
+    height: 44%;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    color: #1b1408;
+  }
+
+  .record-info{ flex: 1; min-width:0; }
+
+  .record-info .title{
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .record-info .artist{
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .genre-tag{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 20px;
+    padding: 3px 10px;
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .delete-btn{
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 6px;
+    flex: none;
+    border-radius: 6px;
+    transition: color .15s ease, background .15s ease;
+  }
+  .delete-btn:hover{ color: var(--danger); background: rgba(193,89,74,0.1); }
+
+  .empty-state{
+    text-align:center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .big{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: var(--text);
+    display:block;
+    margin-bottom: 6px;
+  }
+
+  footer{
+    text-align:center;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 640px){
+    form#add-form, .filters{ grid-template-columns: 1fr; }
+    header.hero{ flex-direction: column; align-items: flex-start; gap: 16px; }
+    .record{ flex-wrap: wrap; }
+    .genre-tag{ order: 3; margin-left: 62px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="vinyl" aria-hidden="true"></div>
+    <div class="hero-text">
+      <h1>Mi colección de CDs</h1>
+      <p>Cataloga tus CDs y encuéntralos al instante</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="add-heading">
+    <span class="eyebrow">Añadir</span>
+    <h2 id="add-heading">Nuevo CD</h2>
+    <p class="section-sub">Rellena la ficha y se guardará en tu navegador.</p>
+
+    <form id="add-form">
+      <div class="field">
+        <label for="f-title">Título</label>
+        <input type="text" id="f-title" placeholder="Nevermind" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-artist">Artista</label>
+        <input type="text" id="f-artist" placeholder="Fleetwood Mac" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-genre">Estilo</label>
+        <input type="text" id="f-genre" placeholder="Rock" autocomplete="off" list="genre-suggestions">
+        <datalist id="genre-suggestions"></datalist>
+      </div>
+      <p class="form-msg" id="form-msg"></p>
+      <button type="submit">Añadir a la colección</button>
+    </form>
+  </section>
+
+  <section aria-labelledby="list-heading">
+    <span class="eyebrow">Colección</span>
+    <h2 id="list-heading">Tus CDs</h2>
+    <p class="section-sub">Filtra por título, artista o estilo. Los filtros se combinan entre sí.</p>
+
+    <div class="filters">
+      <input type="text" id="filter-title" placeholder="Filtrar por título…" autocomplete="off">
+      <input type="text" id="filter-artist" placeholder="Filtrar por artista…" autocomplete="off">
+      <input type="text" id="filter-genre" placeholder="Filtrar por estilo…" autocomplete="off">
+    </div>
+
+    <div class="list-meta">
+      <span id="count-label">0 discos</span>
+      <button type="button" id="clear-filters">Quitar filtros</button>
+    </div>
+
+    <div id="record-list"></div>
+  </section>
+
+  <footer>Guardado localmente en este navegador · nada se envía a ningún servidor</footer>
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'cd-collection-v1';
+
+  const form = document.getElementById('add-form');
+  const fTitle = document.getElementById('f-title');
+  const fArtist = document.getElementById('f-artist');
+  const fGenre = document.getElementById('f-genre');
+  const formMsg = document.getElementById('form-msg');
+
+  const filterTitle = document.getElementById('filter-title');
+  const filterArtist = document.getElementById('filter-artist');
+  const filterGenre = document.getElementById('filter-genre');
+  const clearFiltersBtn = document.getElementById('clear-filters');
+
+  const listEl = document.getElementById('record-list');
+  const countLabel = document.getElementById('count-label');
+  const genreSuggestions = document.getElementById('genre-suggestions');
+
+  function loadRecords(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){
+      console.error('No se pudo leer la colección guardada:', e);
+      return [];
+    }
+  }
+
+  function saveRecords(records){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }catch(e){
+      console.error('No se pudo guardar la colección:', e);
+    }
+  }
+
+  let records = loadRecords();
+
+  function uid(){
+    return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  }
+
+  // Color determinístico a partir del texto del estilo, para la etiqueta del CD
+  function colorForGenre(genre){
+    const palette = ['#e3a335', '#4b8b8d', '#c1594a', '#8a7bc7', '#5f9e6b', '#c77db0'];
+    let hash = 0;
+    for(let i=0; i<genre.length; i++){
+      hash = genre.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const idx = Math.abs(hash) % palette.length;
+    return palette[idx];
+  }
+
+  function updateGenreSuggestions(){
+    const genres = [...new Set(records.map(r => r.genre).filter(Boolean))].sort();
+    genreSuggestions.innerHTML = genres.map(g => `<option value="${escapeHtml(g)}"></option>`).join('');
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function render(){
+    const tQuery = filterTitle.value.trim().toLowerCase();
+    const aQuery = filterArtist.value.trim().toLowerCase();
+    const gQuery = filterGenre.value.trim().toLowerCase();
+
+    const filtered = records.filter(r => {
+      return (!tQuery || r.title.toLowerCase().includes(tQuery)) &&
+             (!aQuery || r.artist.toLowerCase().includes(aQuery)) &&
+             (!gQuery || r.genre.toLowerCase().includes(gQuery));
+    });
+
+    countLabel.textContent = records.length === 1
+      ? '1 disco'
+      : `${records.length} discos` + (filtered.length !== records.length ? ` · ${filtered.length} visibles` : '');
+
+    if(records.length === 0){
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <span class="big">Tu colección está vacía todavía</span>
+          Añade tu primer CD en el formulario de arriba.
+        </div>`;
+      return;
+    }
+
+    if(filtered.length === 0){
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <span class="big">Ningún disco coincide con esos filtros</span>
+          Prueba a quitar alguno de los filtros.
+        </div>`;
+      return;
+    }
+
+    listEl.innerHTML = filtered
+      .slice()
+      .sort((a,b) => a.title.localeCompare(b.title, 'es'))
+      .map(r => {
+        const initial = r.title.trim().charAt(0).toUpperCase() || '?';
+        const color = colorForGenre(r.genre || 'sin estilo');
+        return `
+        <div class="record" data-id="${r.id}">
+          <div class="label-disc"><span style="background:${color}">${escapeHtml(initial)}</span></div>
+          <div class="record-info">
+            <div class="title">${escapeHtml(r.title)}</div>
+            <div class="artist">${escapeHtml(r.artist)}</div>
+          </div>
+          ${r.genre ? `<span class="genre-tag">${escapeHtml(r.genre)}</span>` : ''}
+          <button class="delete-btn" data-id="${r.id}" title="Eliminar disco" aria-label="Eliminar ${escapeHtml(r.title)}">✕</button>
+        </div>`;
+      }).join('');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const title = fTitle.value.trim();
+    const artist = fArtist.value.trim();
+    const genre = fGenre.value.trim();
+
+    if(!title || !artist){
+      formMsg.textContent = 'El título y el artista son obligatorios.';
+      return;
+    }
+    formMsg.textContent = '';
+
+    records.push({ id: uid(), title, artist, genre });
+    saveRecords(records);
+    updateGenreSuggestions();
+    render();
+
+    form.reset();
+    fTitle.focus();
+  });
+
+  listEl.addEventListener('click', function(e){
+    const btn = e.target.closest('.delete-btn');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    records = records.filter(r => r.id !== id);
+    saveRecords(records);
+    updateGenreSuggestions();
+    render();
+  });
+
+  [filterTitle, filterArtist, filterGenre].forEach(input => {
+    input.addEventListener('input', render);
+  });
+
+  clearFiltersBtn.addEventListener('click', function(){
+    filterTitle.value = '';
+    filterArtist.value = '';
+    filterGenre.value = '';
+    render();
+  });
+
+  updateGenreSuggestions();
+  render();
+})();
+</script>
+</body>
+</html>
