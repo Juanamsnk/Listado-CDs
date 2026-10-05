@@ -161,6 +161,14 @@
     color: var(--teal); border: 1px solid var(--teal); border-radius: 20px; padding: 3px 10px; flex: none; white-space: nowrap;
   }
 
+  .buy-btn{
+    background: none; border: 1px solid var(--amber); color: var(--amber);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: none; white-space: nowrap;
+    transition: background .15s ease, color .15s ease;
+  }
+  .buy-btn:hover{ background: var(--amber); color: #1b1408; }
+
   .delete-btn{
     background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; line-height: 1;
     padding: 6px; flex: none; border-radius: 6px; transition: color .15s ease, background .15s ease;
@@ -343,7 +351,7 @@
       storageKey, formId, titleInputId, artistInputId, genreInputId, formMsgId,
       filterTitleId, filterArtistId, filterGenreId, clearFiltersId,
       listId, countId, genreDatalistId, exportBtnId,
-      unitLabel, pdfTitle, pdfFileName
+      unitLabel, pdfTitle, pdfFileName, onMove
     } = config;
 
     const form = document.getElementById(formId);
@@ -432,6 +440,7 @@
               <div class="artist">${escapeHtml(r.artist)}</div>
             </div>
             ${r.genre ? `<span class="genre-tag">${escapeHtml(r.genre)}</span>` : ''}
+            ${onMove ? `<button class="buy-btn" data-id="${r.id}" title="Pasar a Mi colección" aria-label="Marcar ${escapeHtml(r.title)} como comprado">✓ Comprado</button>` : ''}
             <button class="delete-btn" data-id="${r.id}" title="Eliminar" aria-label="Eliminar ${escapeHtml(r.title)}">✕</button>
           </div>`;
         }).join('');
@@ -458,6 +467,17 @@
     });
 
     listEl.addEventListener('click', function(e){
+      const buyBtn = e.target.closest('.buy-btn');
+      if(buyBtn && onMove){
+        const rec = records.find(r => r.id === buyBtn.dataset.id);
+        if(!rec) return;
+        onMove({ id: uid(), title: rec.title, artist: rec.artist, genre: rec.genre });
+        records = records.filter(r => r.id !== rec.id);
+        save();
+        updateGenreSuggestions();
+        render();
+        return;
+      }
       const btn = e.target.closest('.delete-btn');
       if(!btn) return;
       records = records.filter(r => r.id !== btn.dataset.id);
@@ -483,6 +503,15 @@
 
     updateGenreSuggestions();
     render();
+
+    return {
+      addRecord(rec){
+        records.push(rec);
+        save();
+        updateGenreSuggestions();
+        render();
+      }
+    };
   }
 
   // ---------- EXPORTAR A PDF ----------
@@ -514,7 +543,7 @@
   }
 
   // ---------- INSTANCIAS ----------
-  createManager({
+  const collectionManager = createManager({
     storageKey: 'cd-collection-v1',
     formId: 'form-collection',
     titleInputId: 'collection-title',
@@ -561,7 +590,8 @@
       emptyHint: 'Apunta aquí los CDs que te gustaría conseguir.'
     },
     pdfTitle: 'Discos deseados',
-    pdfFileName: 'discos-deseados.pdf'
+    pdfFileName: 'discos-deseados.pdf',
+    onMove: rec => collectionManager.addRecord(rec)
   });
 
 })();
