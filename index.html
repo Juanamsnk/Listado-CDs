@@ -181,11 +181,41 @@
   footer{ text-align:center; color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; margin-top: 8px; }
 
   @media (max-width: 640px){
+    .wrap{ padding: 28px 14px 56px; }
+    section{ padding: 20px 16px 22px; margin-bottom: 20px; }
+
+    header.hero{ flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 28px; }
+    .vinyl{ --size: 84px; }
+    .hero-text h1{ font-size: 2.2rem; }
+    .hero-text p{ font-size: 0.82rem; }
+
+    .tabs{ margin-bottom: 22px; }
+    .tab-btn{ flex: 1; padding: 12px 6px; font-size: 0.7rem; letter-spacing: 0.8px; text-align: center; }
+
     .add-form, .filters{ grid-template-columns: 1fr; }
-    header.hero{ flex-direction: column; align-items: flex-start; gap: 16px; }
-    .record{ flex-wrap: wrap; }
-    .genre-tag{ order: 3; margin-left: 62px; }
-    .list-meta{ align-items: flex-start; }
+    .field input, .filters input{ font-size: 16px; } /* evita el zoom automático en iOS */
+    .add-form button{ justify-self: stretch; width: 100%; }
+
+    .list-meta{ flex-direction: column; align-items: stretch; gap: 10px; }
+    .list-meta .actions{ justify-content: space-between; flex-wrap: wrap; }
+
+    /* Ficha de disco: título/artista arriba, estilo y botón debajo */
+    .record{
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
+      grid-template-areas:
+        "disc info del"
+        ".    tag  buy";
+      column-gap: 12px; row-gap: 10px; align-items: center;
+      padding: 12px;
+    }
+    .label-disc{ grid-area: disc; }
+    .record-info{ grid-area: info; }
+    .record-info .title{ white-space: normal; overflow-wrap: anywhere; }
+    .record-info .artist{ overflow-wrap: anywhere; }
+    .delete-btn{ grid-area: del; align-self: start; padding: 8px 10px; }
+    .genre-tag{ grid-area: tag; justify-self: start; margin-left: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .buy-btn{ grid-area: buy; justify-self: end; padding: 9px 12px; }
   }
 </style>
 </head>
